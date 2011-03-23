@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<window id="14000">
+  <defaultcontrol always="true">14055</defaultcontrol>
+  <allowoverlay>yes</allowoverlay>
+	<onload lang="python"><![CDATA[
+import classic_gaming
+
+classic_gaming.initialize('config.xml')
+
+item_list = mc.ListItems()
+for rom in classic_gaming.get_rom_list():
+  item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
+  item.SetLabel(rom['name'])
+  item.SetPath(rom['path'])
+  item.SetThumbnail(rom['thumbnailPath'])
+  item.SetProperty('system', rom['system'])
+  item_list.append(item)
+
+mc.GetWindow(14000).GetList(14055).SetItems(item_list)
+]]></onload>
+  <controls>
+    <include>BrowseListsAnimation</include>
+		<include>Common_Background</include>
+		<include>Common_Status</include>
+    <control type="label" id="9001"> <!-- title -->
+      <avisible>Window.Property(my-set) + !Window.Property(search-set) + !Window.Property(searching) + !Window.IsActive(408)</avisible>
+      <posx>54</posx>
+      <posy>40</posy>
+      <width>1000</width>
+      <height>56</height>
+      <align>left</align>
+      <aligny>center</aligny>
+      <haspath>true</haspath>
+      <font>title56b</font>
+      <textcolor>white</textcolor>
+      <label>[UPPERCASE]Classic Gaming[/UPPERCASE]</label>
+    </control> <!-- end title -->
+    <control type="label">
+      <visible>Window.Property(my-set) + !Window.Property(all-set) + !Window.Property(search-set) + !Window.Property(searching) + !Window.IsActive(408) + !Window.Property(repository-set)</visible>
+      <include>BrowseSubTitle</include>
+      <label>[UPPERCASE]$INFO[Window.Property(sort-label),,  ][COLOR grey]$INFO[Container.NumItems, (, $LOCALIZE[54059])][/COLOR][/UPPERCASE]</label>
+    </control>
+    <control type="label">
+      <visible>!Window.Property(my-set) + Window.Property(all-set) + !Window.Property(search-set) + !Window.Property(searching) + !Window.IsActive(408) + !Window.Property(repository-set)</visible>
+      <include>BrowseSubTitle</include>
+      <label>[UPPERCASE]$INFO[Window.Property(sort-label),,  ][COLOR grey]$INFO[Container.NumItems, (, $LOCALIZE[54059])][/COLOR][/UPPERCASE]</label>
+    </control>
+    <control type="label">
+      <visible>Window.Property(search-set)</visible>
+      <include>BrowseSubTitle</include>
+      <label>[UPPERCASE]$INFO[Window.Property(search-label)][/UPPERCASE]</label>
+    </control>
+    <control type="group">
+      <animation effect="fade" start="100" end="0" time="200" condition="Window.IsActive(boxee_search.xml)">Conditional</animation>
+      <control type="panel" id="14055"> <!-- main list -->
+
+		 		<content type="url" url="$INFO[launcherUrl]">
+          <onclick lang="python"><![CDATA[
+list = mc.GetWindow(14000).GetList(14055)
+listitems = list.GetItems()
+listitem = listitems[list.GetFocusedItem()]
+rom = str(listitem.GetPath())
+classic_gaming.launch_rom(listitem.GetProperty('system'), rom)
+]]></onclick>
+        </content>
+        <include>BrowseListAnimation</include>
+        <preloaditems>2</preloaditems>
+        <posx>46</posx>
+        <posy>136</posy>
+        <width>1182</width>
+        <height>584</height>
+        <onleft>8000</onleft>
+        <onright>6000</onright>
+        <onup>6000</onup>
+        <ondown>-</ondown>
+        <scrolltime>400</scrolltime>
+        <pagecontrol>60</pagecontrol>
+        <orientation>vertical</orientation>
+        <itemlayout height="210" width="192">
+          <control type="image"> <!-- list item thumb -->
+            <visible>!IsEmpty(ListItem.Thumb)</visible>
+            <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>192</width>
+            <height>192</height>
+            <bordertexture border="12">masks/thumb_background.png</bordertexture>
+            <bordersize>12</bordersize>
+            <texture blend="false">$INFO[ListItem.Thumb]</texture>
+            <aspectratio scalediffuse="false">keep</aspectratio>
+            <fadetime>200</fadetime>
+          </control>
+          <control type="image">
+            <visible>IsEmpty(ListItem.Thumb)</visible>
+            <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>192</width>
+            <height>192</height>
+            <bordertexture border="12">masks/thumb_background.png</bordertexture>
+            <bordersize>12</bordersize>
+            <texture>black.png</texture>
+          </control> <!-- end list item thumb -->
+          <control type="label"> <!-- list item overlay -->
+            <visible>!IsEmpty(ListItem.Thumb)</visible>
+            <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+            <posx>96</posx>
+            <posy>184</posy>
+            <width>168</width>
+            <height>18</height>
+            <label>[UPPERCASE]$INFO[ListItem.label][/UPPERCASE]</label>
+            <font>font18b</font>
+            <align>center</align>
+            <aligny>center</aligny>
+            <textcolor>white</textcolor>
+          </control> <!-- end list item overlay -->
+        </itemlayout>
+        <focusedlayout height="210" width="192">
+          <control type="group"> <!-- focused list item -->
+            <visible>!Control.HasFocus(14055)</visible>
+            <control type="image"> <!-- list item thumb -->
+              <visible>!IsEmpty(ListItem.Thumb)</visible>
+              <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+              <posx>0</posx>
+              <posy>0</posy>
+              <width>192</width>
+              <height>192</height>
+              <bordertexture border="12">masks/thumb_background.png</bordertexture>
+              <bordersize>12</bordersize>
+              <texture blend="false">$INFO[ListItem.Thumb]</texture>
+              <aspectratio scalediffuse="false">keep</aspectratio>
+              <fadetime>200</fadetime>
+            </control>
+            <control type="image">
+              <visible>IsEmpty(ListItem.Thumb)</visible>
+              <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+              <posx>0</posx>
+              <posy>0</posy>
+              <width>192</width>
+              <height>192</height>
+              <bordertexture border="12">masks/thumb_background.png</bordertexture>
+              <bordersize>12</bordersize>
+              <texture>black.png</texture>
+            </control> <!-- end list item thumb -->
+            <control type="label"> <!-- list item overlay -->
+              <visible>!IsEmpty(ListItem.Thumb)</visible>
+              <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
+              <posx>96</posx>
+              <posy>184</posy>
+              <width>168</width>
+              <height>18</height>
+              <label>[UPPERCASE]$INFO[ListItem.label][/UPPERCASE]</label>
+              <font>font18b</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>white</textcolor>
+            </control> <!-- end list item overlay -->
+          </control> <!-- end focused list item -->
+          <control type="group">
+            <visible>Control.HasFocus(14055)</visible>
+            <control type="image"> <!-- list item thumb -->
+              <visible>!IsEmpty(ListItem.Thumb)</visible>
+              <animation type="Focus">
+                <effect type="fade" start="80" end="100" time="100" delay="0"/>
+                <effect type="zoom" start="100,100" end="110,110" time="200" delay="0" center="auto" tween="cubic" easing="out"/>
+              </animation>
+              <posx>-10</posx>
+              <posy>-10</posy>
+              <width>212</width>
+              <height>212</height>
+              <bordertexture border="20">masks/thumb_background_on.png</bordertexture>
+              <bordersize>20</bordersize>
+              <texture blend="false">$INFO[ListItem.Thumb]</texture>
+              <aspectratio scalediffuse="false">keep</aspectratio>
+              <fadetime>200</fadetime>
+            </control>
+            <control type="image">
+              <visible>IsEmpty(ListItem.Thumb)</visible>
+              <animation type="Focus">
+                <effect type="fade" start="80" end="100" time="100" delay="0"/>
+                <effect type="zoom" start="100,100" end="110,110" time="200" delay="0" center="auto" tween="cubic" easing="out"/>
+              </animation>
+              <posx>-10</posx>
+              <posy>-10</posy>
+              <width>212</width>
+              <height>212</height>
+              <bordertexture border="20">masks/thumb_background_on.png</bordertexture>
+              <bordersize>20</bordersize>
+              <texture>black.png</texture>
+            </control> <!-- end list item thumb -->
+            <control type="label"><!-- list item overlay thumb -->
+              <animation type="Focus">
+                <effect type="fade" start="80" end="100" time="100" delay="0"/>
+                <effect type="slide" start="0,4" end="0,14" time="200" delay="0" tween="cubic" easing="out"/>
+              </animation>
+              <visible>!IsEmpty(ListItem.Thumb)</visible>
+              <posx>96</posx>
+              <posy>184</posy>
+              <width>192</width>
+              <height>18</height>
+              <label>[UPPERCASE]$INFO[ListItem.label][/UPPERCASE]</label>
+              <font>font18b</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>white</textcolor>
+              <scroll>true</scroll>
+            </control> <!-- end list item overlay thumb -->
+          </control>
+        </focusedlayout>
+      </control> <!-- end list -->
+      <control type="scrollbar" id="60"> <!-- scrollbar -->
+        <visible>Control.IsVisible(14055)</visible>
+        <posx>1220</posx>
+        <posy>136</posy>
+        <width>28</width>
+        <height>570</height>
+        <texturesliderbackground border="14">scrollbar_bg.png</texturesliderbackground>
+        <textureslidernib>-</textureslidernib>
+        <textureslidernibfocus>-</textureslidernibfocus>
+        <texturesliderbar diffuse="nofocus.png" border="14">scrollbar_slider.png</texturesliderbar>
+        <texturesliderbarfocus diffuse="nofocus.png" border="14">scrollbar_slider.png</texturesliderbarfocus>
+        <orientation>vertical</orientation>
+        <showonepage>false</showonepage>
+      </control> <!-- end scrollbar -->
+      <include>BrowseEmptyList</include>
+    </control>
+    <include>Bottom_Feather</include>
+
+    <!--
+		<control type="group" id="8000">
+			<include>BrowseLeftMenuAnimation</include>
+			<include>BrowseLeftMenuBackground</include>
+			<control type="grouplist">
+				<include>BrowseLeftMenu</include>
+				<control type="button" id="160">
+					<animation effect="fade" start="100" end="0" time="0" condition="Window.IsActive(boxee_search.xml)">Conditional</animation>			
+          <width>224</width>
+          <height>40</height>
+          <font>font24b</font>
+          <align>left</align>
+          <aligny>center</aligny>
+          <textcolor>white</textcolor>
+          <focusedcolor>white</focusedcolor>
+          <textoffsetx>14</textoffsetx>
+          <texturenofocus border="20">search_text_box.png</texturenofocus>
+          <texturefocus border="20">search_text_box_focus.png</texturefocus>
+          <textureclick border="20">search_text_box_click.png</textureclick>
+					<label>Search</label>
+				</control>
+				<control type="label" id="402">
+					<include>BrowseLeftMenuTitle</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54012</label>
+				</control>
+				<control type="group" id="403">
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<enable>true + !Window.Property(search-set) + !Window.Property(repository-set)</enable>
+					<width>224</width>
+					<height>86</height>
+					<control type="togglebutton" id="120">
+						<include>BrowseLeftMenuFilterUp</include>
+						<onright>9000</onright>
+						<onup>402</onup>
+						<ondown>130</ondown>
+						<label>54033</label>
+						<usealttexture>Window.Property(my-set)  + !Window.Property(search-set)</usealttexture>
+					</control>
+					<control type="togglebutton" id="130">
+						<include>BrowseLeftMenuFilterDown</include>
+						<onright>9000</onright>
+						<onup>120</onup>
+						<ondown>404</ondown>
+						<label>54034</label>
+						<usealttexture>Window.Property(all-set)  + !Window.Property(search-set)</usealttexture>
+					</control>
+				</control>
+				<control type="label" id="404">
+					<include>BrowseLeftMenuSubtitle</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54013</label>
+				</control>
+				<control type="button" id="110">
+					<enable>true + !Window.Property(search-set) + !Window.Property(repository-set)</enable>
+					<include>BrowseLeftMenuDropDown</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>$INFO[Window.Property(sort-label)]</label>
+				</control>
+				<control type="label" id="405">
+					<include>BrowseLeftMenuSubtitle</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54014</label>
+				</control>
+				<control type="togglebutton" id="170">
+					<enable>true + !Window.Property(search-set)</enable>
+					<include>BrowseLeftMenuDropDown</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>Type$INFO[Window.Property(type-label), : ]</label>
+					<usealttexture>Window.Property(type-set)</usealttexture>
+				</control>
+				<control type="label" id="406">
+					<include>BrowseLeftMenuSubtitle</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54015</label>
+				</control>
+				<control type="group" id="407">
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<width>216</width>
+					<height>64</height>
+					<control type="togglebutton" id="191">
+						<include>BrowseLeftMenuViewUp</include>
+						<onright>9000</onright>
+						<onup>406</onup>
+						<ondown>192</ondown>
+						<label>54016</label>
+						<usealttexture>Control.IsVisible(14055)</usealttexture>
+						<onclick>Container.SetViewMode(14055)</onclick>
+					</control>
+					<control type="togglebutton" id="192">
+						<include>BrowseLeftMenuViewDown</include>
+						<onright>9000</onright>
+						<onup>191</onup>
+						<ondown>408</ondown>
+						<label>54017</label>
+						<usealttexture>Control.IsVisible(56)</usealttexture>
+						<onclick>Container.SetViewMode(56)</onclick>
+					</control>
+				</control>
+				<control type="group" id="408">
+					<width>224</width>
+					<height>16</height>
+				</control>
+				<control type="label" id="409">
+					<include>BrowseLeftMenuTitle</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54018</label>
+				</control>
+				<control type="button" id="200">
+					<enable>true + !Window.Property(search-set)</enable>
+					<include>BrowseLeftMenuButton</include>
+					<include>BrowseLeftMenuSearchAnimation</include>
+					<label>54019</label>
+				</control>
+			</control>
+		</control> -->
+		<include>BrowseLoadingAnimation</include>
+		<include>Common_Now_Playing</include>
+	</controls>
+</window>

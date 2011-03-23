@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config>
+  <systems>
+    <system slug="snes">
+      <name>Super NES</name>
+      <emulatorName>ZSNES</emulatorName>
+      <emulatorPath>/usr/bin/zsnes</emulatorPath>
+    </system>
+  </systems>
+  <roms>
+    <rom system="snes">
+      <name>Chrono Trigger</name>
+      <thumbnailPath>/tmp/Chrono Trigger.jpg</thumbnailPath>
+      <publisher>Squaresoft</publisher>
+      <year>1995</year>
+      <path>/tmp/ctrigger.smc</path>
+    </rom>
+  </roms>
+</config>

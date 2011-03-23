@@ -1,0 +1,16 @@
+<app>
+  <id>com.devazero.classic_gaming</id>
+  <name>Classic Gaming</name>
+  <version>1.0</version>
+  <description>Play classic games through emulators.</description>
+  <thumb>http://www.istockphoto.com/file_thumbview_approve/6382196/2/istockphoto_6382196-retro-80-s-video-game-joystick-controller.jpg</thumb>
+  <repository>http://dir.boxee.tv/apps</repository>
+  <media>video</media>
+  <copyright>Jesse Dhillon</copyright>
+  <email>jesse@devazero.com</email>
+  <type>skin</type>
+  <startWindow>14000</startWindow>
+  <platform>all</platform>
+  <minversion>0.9.11</minversion>
+  <test-app>true</test-app>
+</app>
