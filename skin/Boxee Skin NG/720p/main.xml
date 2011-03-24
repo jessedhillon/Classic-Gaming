@@ -4,21 +4,11 @@
   <allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
 import classic_gaming
-
-classic_gaming.initialize('config.xml')
-
-item_list = mc.ListItems()
-for rom in classic_gaming.get_rom_list():
-  item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
-  item.SetLabel(rom['name'])
-  item.SetPath(rom['path'])
-  item.SetThumbnail(rom['thumbnailPath'])
-  item.SetProperty('system', rom['system'])
-  item_list.append(item)
-  print rom['name'], "thumbnail>", rom['thumbnailPath']
-
-mc.GetWindow(14000).GetList(14055).SetItems(item_list)
+main = classic_gaming.MainView.get_instance()
 ]]></onload>
+  <onunload lang="python"><![CDATA[
+classic_gaming.unload()
+]]></onunload>
   <controls>
     <include>BrowseListsAnimation</include>
 		<include>Common_Background</include>
@@ -57,11 +47,7 @@ mc.GetWindow(14000).GetList(14055).SetItems(item_list)
 
 		 		<content type="url" url="$INFO[launcherUrl]">
           <onclick lang="python"><![CDATA[
-list = mc.GetWindow(14000).GetList(14055)
-listitems = list.GetItems()
-listitem = listitems[list.GetFocusedItem()]
-rom = str(listitem.GetPath())
-classic_gaming.launch_rom(listitem.GetProperty('system'), rom)
+main.on_list_item_click()
 ]]></onclick>
         </content>
         <include>BrowseListAnimation</include>

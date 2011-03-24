@@ -26,6 +26,14 @@
       <publisher>Sega</publisher>
       <year>1991</year>
       <path>/home/jesse/Documents/ROMs/Sonic the Hedgehog.md</path>
+      <description>Bust the video game speed barrier wide open with Sonic the Hedgehog. Blaze by in a blut using the super sonic spin attack. Loop the loop by defying gravity. Plummet down tunnels. Then dash to safety with Sonic&apos;s power sneakers. All at a frenzied pace.</description>
+    </rom>
+    <rom system="gen">
+      <name>Herzog Zwei</name>
+      <thumbnailPath>/home/jesse/Documents/ROMs/covers/Herzog Zwei.jpg</thumbnailPath>
+      <publisher>TechnoSoft</publisher>
+      <year>1989</year>
+      <path>/home/jesse/Documents/ROMs/Herzog Zwei.md</path>
     </rom>
   </roms>
 </config>
