@@ -159,8 +159,9 @@ class ActionView(object):
         self.window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + self.item.GetPath() + '[/COLOR]')
 
     def launch_rom(self):
-        items = mc.GetWindow(14401).GetList(5000).GetItems()
-        index = mc.GetWindow(14401).GetList(5000).GetFocusedItem()
+        items = self.item_list.GetItems()
+        index = self.item_list.GetFocusedItem()
 
+        print self.item.GetPath()
         item = items[index]
         launch_rom(item.GetProperty('system'), item.GetPath())

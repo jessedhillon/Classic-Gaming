@@ -157,8 +157,6 @@ action = classic_gaming.ActionView.get_instance()
 						</control>
 					</control>
 					<control type="group"> <!-- logo -->
-						<visible>Container(5000).ListItem.property(IsMovie) | Container(5000).ListItem.property(IsTVShow)</visible>
-						<visible>!IsEmpty(container(5000).ListItem.Property(metaprovider))</visible>
 						<posx>740</posx>
 						<posy>206</posy>
 						<control type="label">
@@ -172,12 +170,11 @@ action = classic_gaming.ActionView.get_instance()
 							<textcolor>white</textcolor>
 							<label>54046</label>
 						</control>
-						<control type="largeimage">
+						<control type="largeimage" id="14010">
 							<posx>0</posx>
 							<posy>20</posy>
 							<width>100</width>
 							<height>50</height>
-							<texture>$INFO[container(5000).ListItem.Property(metaprovider)]</texture>
 						</control>
 					</control> <!-- end logo -->
 				</control>
