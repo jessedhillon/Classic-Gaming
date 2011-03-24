@@ -15,6 +15,7 @@ for rom in classic_gaming.get_rom_list():
   item.SetThumbnail(rom['thumbnailPath'])
   item.SetProperty('system', rom['system'])
   item_list.append(item)
+  print rom['name'], "thumbnail>", rom['thumbnailPath']
 
 mc.GetWindow(14000).GetList(14055).SetItems(item_list)
 ]]></onload>
@@ -143,7 +144,6 @@ classic_gaming.launch_rom(listitem.GetProperty('system'), rom)
               <texture>black.png</texture>
             </control> <!-- end list item thumb -->
             <control type="label"> <!-- list item overlay -->
-              <visible>!IsEmpty(ListItem.Thumb)</visible>
               <animation effect="fade" end="80" time="0" condition="true">Conditional</animation>
               <posx>96</posx>
               <posy>184</posy>
@@ -193,7 +193,6 @@ classic_gaming.launch_rom(listitem.GetProperty('system'), rom)
                 <effect type="fade" start="80" end="100" time="100" delay="0"/>
                 <effect type="slide" start="0,4" end="0,14" time="200" delay="0" tween="cubic" easing="out"/>
               </animation>
-              <visible>!IsEmpty(ListItem.Thumb)</visible>
               <posx>96</posx>
               <posy>184</posy>
               <width>192</width>

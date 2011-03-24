@@ -24,7 +24,6 @@ def get_rom_list():
     for slug, system in config.items():
         if 'roms' in system:
             for rom in system['roms']:
-                print "rom> " + str(rom)
                 roms.append({'name': rom['name'],
                              'path': rom['path'],
                              'thumbnailPath': rom.get('thumbnailPath', ''),
@@ -36,7 +35,7 @@ def get_rom_list():
 
 def launch_rom(system, romPath):
     global config
-    os.system('%s %s' % (config[system]['emulatorPath'], romPath))
+    os.system("%s '%s'" % (config[system]['emulatorPath'], romPath))
 
 def parse_config(path):
     tree = ElementTree.parse(path) 

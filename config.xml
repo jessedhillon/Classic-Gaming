@@ -4,16 +4,28 @@
     <system slug="snes">
       <name>Super NES</name>
       <emulatorName>ZSNES</emulatorName>
-      <emulatorPath>/usr/bin/zsnes</emulatorPath>
+      <emulatorPath>/usr/bin/zsnes </emulatorPath>
+    </system>
+    <system slug="gen">
+      <name>Sega Genesis</name>
+      <emulatorName>dgen</emulatorName>
+      <emulatorPath>/usr/bin/dgen -f </emulatorPath>
     </system>
   </systems>
   <roms>
     <rom system="snes">
       <name>Chrono Trigger</name>
-      <thumbnailPath>/tmp/Chrono Trigger.jpg</thumbnailPath>
+      <thumbnailPath>/home/jesse/Documents/ROMs/covers/Chrono Trigger.jpg</thumbnailPath>
       <publisher>Squaresoft</publisher>
       <year>1995</year>
-      <path>/tmp/ctrigger.smc</path>
+      <path>/home/jesse/Documents/ROMs/Chrono Trigger.smc</path>
+    </rom>
+    <rom system="gen">
+      <name>Sonic the Hedgehog</name>
+      <thumbnailPath>/home/jesse/Documents/ROMs/covers/Sonic the Hedgehog.jpg</thumbnailPath>
+      <publisher>Sega</publisher>
+      <year>1991</year>
+      <path>/home/jesse/Documents/ROMs/Sonic the Hedgehog.md</path>
     </rom>
   </roms>
 </config>
