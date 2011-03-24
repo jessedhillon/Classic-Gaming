@@ -221,12 +221,10 @@ window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + item.GetPath() + '[/COLOR]
 import os
 import classic_gaming
 
-system = classic_gaming.config[item.GetProperty('system')]
-
 item_list = mc.GetWindow(14401).GetList(5000)
 items = item_list.GetItems()
-index = item_list.GetFocusedItem()
-item = items[index]
+item = items[0]
+system = classic_gaming.config[item.GetProperty('system')]
 
 os.system("%s '%s'" % (system['emulatorPath'], item.GetPath()))
 ]]></onclick>
