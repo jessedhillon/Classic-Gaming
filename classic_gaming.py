@@ -105,7 +105,7 @@ class MainView(object):
 
     def __init__(self):
         initialize('config.xml')
-        self.window = get_window('main')
+        self.window = mc.GetWindow(14000) # get_window('main')
         self.item_list = self.window.GetList(14055)
 
         items = mc.ListItems()
@@ -144,7 +144,7 @@ class ActionView(object):
         mc.ActivateWindow(14401)
 
         self.item = State['current_item']
-        self.window = get_window('action')
+        self.window = mc.GetWindow(14401) # get_window('action')
         self.item_list = self.window.GetList(5000)
 
         items = mc.ListItems()
@@ -157,3 +157,10 @@ class ActionView(object):
         self.window.GetLabel(14104).SetLabel(self.item.GetProperty('description'))
         self.window.GetLabel(6013).SetLabel(system['name'])
         self.window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + self.item.GetPath() + '[/COLOR]')
+
+    def launch_rom(self):
+        items = mc.GetWindow(14401).GetList(5000).GetItems()
+        index = mc.GetWindow(14401).GetList(5000).GetFocusedItem()
+
+        item = items[index]
+        launch_rom(item.GetProperty('system'), item.GetPath())
