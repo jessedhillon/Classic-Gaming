@@ -20,7 +20,7 @@ def get_system_list():
 
     systems = []
     for slug, system in config.items():
-        systems.append({'slug': slug, 'name': system['name']})
+        systems.append({'slug': slug, 'name': system['name'], 'emulatorPath': system['emulatorPath']})
 
     return systems
 
@@ -95,73 +95,73 @@ def unload():
     windows = {}
     config = None
 
-class MainView(object):
-    @staticmethod
-    def get_instance():
-        global Views
-        if 'main' not in Views:
-            Views['main'] = MainView()
-        return Views['main']
-
-    def __init__(self):
-        initialize('config.xml')
-        self.window = mc.GetWindow(14000) # get_window('main')
-        self.item_list = self.window.GetList(14055)
-
-        items = mc.ListItems()
-        for rom in get_rom_list():
-          item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
-          item.SetLabel(rom['name'])
-          item.SetPath(rom['path'])
-          item.SetThumbnail(rom['thumbnailPath'])
-          item.SetProperty('description', rom['description'])
-          item.SetProperty('system', rom['system'])
-          item.SetProperty('publisher', rom['publisher'])
-          item.SetProperty('year', rom['year'])
-          items.append(item)
-
-        self.item_list.SetItems(items)
-
-    def on_list_item_click(self):
-        items = self.item_list.GetItems()
-        index = self.item_list.GetFocusedItem()
-
-        item = items[index]
-        State['current_item'] = item
-
-        action = ActionView.get_instance()
-        # launch_rom(item.GetProperty('system'), item.GetPath())
-
-class ActionView(object):
-    @staticmethod
-    def get_instance():
-        global Views
-        if 'action' not in Views:
-            Views['action'] = ActionView()
-        return Views['action']
-
-    def __init__(self):
-        mc.ActivateWindow(14401)
-
-        self.item = State['current_item']
-        self.window = mc.GetWindow(14401) # get_window('action')
-        self.item_list = self.window.GetList(5000)
-
-        items = mc.ListItems()
-        items.append(self.item)
-        self.item_list.SetItems(items)
-
-        system = config[self.item.GetProperty('system')]
-        self.window.GetLabel(14101).SetLabel(self.item.GetProperty('publisher'))
-        self.window.GetLabel(14102).SetLabel('[COLOR grey]' + self.item.GetProperty('year') + '[/COLOR]')
-        self.window.GetLabel(14104).SetLabel(self.item.GetProperty('description'))
-        self.window.GetLabel(6013).SetLabel(system['name'])
-        self.window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + self.item.GetPath() + '[/COLOR]')
-
-    def launch_rom(self):
-        items = self.item_list.GetItems()
-        index = self.item_list.GetFocusedItem()
-
-        print self.item.GetPath()
-        item = items[index]
-        launch_rom(item.GetProperty('system'), item.GetPath())
+# class MainView(object):
+#     @staticmethod
+#     def get_instance():
+#         global Views
+#         if 'main' not in Views:
+#             Views['main'] = MainView()
+#         return Views['main']
+# 
+#     def __init__(self):
+#         initialize('config.xml')
+#         self.window = mc.GetWindow(14000) # get_window('main')
+#         self.item_list = self.window.GetList(14055)
+# 
+#         items = mc.ListItems()
+#         for rom in get_rom_list():
+#           item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
+#           item.SetLabel(rom['name'])
+#           item.SetPath(rom['path'])
+#           item.SetThumbnail(rom['thumbnailPath'])
+#           item.SetProperty('description', rom['description'])
+#           item.SetProperty('system', rom['system'])
+#           item.SetProperty('publisher', rom['publisher'])
+#           item.SetProperty('year', rom['year'])
+#           items.append(item)
+# 
+#         self.item_list.SetItems(items)
+# 
+#     def on_list_item_click(self):
+#         items = self.item_list.GetItems()
+#         index = self.item_list.GetFocusedItem()
+# 
+#         item = items[index]
+#         State['current_item'] = item
+# 
+#         action = ActionView.get_instance()
+#         # launch_rom(item.GetProperty('system'), item.GetPath())
+# 
+# class ActionView(object):
+#     @staticmethod
+#     def get_instance():
+#         global Views
+#         if 'action' not in Views:
+#             Views['action'] = ActionView()
+#         return Views['action']
+# 
+#     def __init__(self):
+#         mc.ActivateWindow(14401)
+# 
+#         self.item = State['current_item']
+#         self.window = mc.GetWindow(14401) # get_window('action')
+#         self.item_list = self.window.GetList(5000)
+# 
+#         items = mc.ListItems()
+#         items.append(self.item)
+#         self.item_list.SetItems(items)
+# 
+#         system = config[self.item.GetProperty('system')]
+#         self.window.GetLabel(14101).SetLabel(self.item.GetProperty('publisher'))
+#         self.window.GetLabel(14102).SetLabel('[COLOR grey]' + self.item.GetProperty('year') + '[/COLOR]')
+#         self.window.GetLabel(14104).SetLabel(self.item.GetProperty('description'))
+#         self.window.GetLabel(6013).SetLabel(system['name'])
+#         self.window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + self.item.GetPath() + '[/COLOR]')
+# 
+#     def launch_rom(self):
+#         items = self.item_list.GetItems()
+#         index = self.item_list.GetFocusedItem()
+# 
+#         print self.item.GetPath()
+#         item = items[index]
+#         launch_rom(item.GetProperty('system'), item.GetPath())
