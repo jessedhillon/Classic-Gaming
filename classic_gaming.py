@@ -1,28 +1,155 @@
 import os
-import mc
+
+import mysql.connector as mysql
 from xml.etree import ElementTree
 
 State = {}
 Views = {}
 
 config = None
-windows = {}
 
 def initialize(path='config.xml'):
-    global config
-    config = parse_config(os.getcwd() + '/' + path)    
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute("""
+create table if not exists
+    system(
+        slug varchar(20),
+        name varchar(50),
+        path varchar(255),
+        primary key(slug)
+    )
+""")
+    curs.execute("""
+create table if not exists
+    rom(
+        id int not null auto_increment,
+        system varchar(20),
+        title varchar(50),
+        path varchar(255),
+        thumbnail varchar(255),
+        image varchar(255),
+        publisher varchar(50),
+        year int,
+        description text,
+        primary key(id)
+    )
+""")
+    conn.close()
 
-    windows['main'] = mc.GetWindow(14000)
-    windows['action'] = mc.GetWindow(14401)
+def connect():
+    db = "classic_gaming.db"
+    return mysql.connect(database='classic_gaming', user='root', password='')
 
-def get_system_list():
-    global config
+def insert_system(slug, name, path):
+    query = "insert into system(slug, name, path) values(%s, %s, %s)"
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query, (slug, name, path))
+    conn.close()
+
+def get_rom_by(**kwargs):
+    query = "select id, system, title, path, thumbnail, image, publisher, year, description from rom where %s = %s"
+
+    params = []
+
+    if 'path' in kwargs:
+        params.append('path')
+        params.append(kwargs['path']) 
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query, params)
+    result = curs.fetchone()
+    conn.close()
+
+    if not result:
+        return None
+
+    return {
+        'id': rom[0],
+        'system': rom[1],
+        'title': rom[2],
+        'path': rom[3],
+        'thumbnail': rom[4],
+        'image': rom[5],
+        'publisher': rom[6],
+        'year': rom[7],
+        'description': rom[8],
+    }
+
+def insert_rom(system, title, path, thumbnail='', image='', publisher='', year='', description=''):
+    query = "insert into rom(system, title, path, thumbnail, image, publisher, year, description) values (%s, %s, %s, %s, %s, %s, %s, %s)"
+
+    conn = connect()
+    curs = conn.cursor()
+
+    if not get_rom_by(path=path):
+        curs.execute(query, (system, title, path, thumbnail, image, publisher, year, description))
+    conn.close()
+
+def get_system_by_slug(slug):
+    query = "select slug, name, path from system where slug = %s"
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query, (slug,))
+    result = curs.fetchone()
+    conn.close()
+
+    if not result:
+        raise Exception("None or multiple results for slug = %s" % slug)
+
+    return {
+        'slug': result[0],
+        'name': result[1], 
+        'path': result[2]
+    }
+
+def fetch_systems(order_by='name', direction='asc'):
+    query = "select slug, name, path from system order by %s"
 
     systems = []
-    for slug, system in config.items():
-        systems.append({'slug': slug, 'name': system['name'], 'emulatorPath': system['emulatorPath']})
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query, ("%s %s" % (order_by, direction)))
+
+    for r in curs:
+        systems.append({
+            'slug': r[0],
+            'name': r[1],
+            'path': r[2]
+        })
+    conn.close()
 
     return systems
+
+def fetch_roms():
+    query = "select * from rom order by title asc"
+
+    roms = []
+
+    conn = connect()
+    curs = conn.cursor()
+    curs.execute(query)
+
+    for r in curs:
+        roms.append({
+            'id': r[0],
+            'system': r[1],
+            'title': r[2],
+            'path': r[3],
+            'thumbnail': r[4],
+            'image': r[5],
+            'publisher': r[6],
+            'year': r[7],
+            'description': r[8],
+        })
+    conn.close()
+
+    return roms
 
 def get_rom_list():
     global config
@@ -41,127 +168,6 @@ def get_rom_list():
 
     return roms
 
-def launch_rom(system, romPath):
-    print "launching rom"
-    global config
-    print "got config"
-    os.system("%s '%s'" % (config[system]['emulatorPath'], romPath))
-
-def parse_config(path):
-    tree = ElementTree.parse(path) 
-    root = tree.getroot()
-
-    systems = {}
-
-    for s in root.find('systems').getchildren():
-        if s.tag != 'system':
-            continue
-
-        slug = s.attrib['slug']
-        name = s.find('name').text
-        emulatorPath = s.find('emulatorPath').text
-        emulatorName = s.find('emulatorName').text
-
-        systems[slug] = {'name': name,
-                         'emulatorPath': emulatorPath,
-                         'emulatorName': emulatorName}
-
-    for r in root.find('roms').getchildren():
-        if r.tag != 'rom':
-            continue
-
-        rom = {}                
-        system = r.attrib['system']
-
-        rom['name'] = r.find('name').text
-        rom['path'] = r.find('path').text
-
-        for prop in ['thumbnailPath', 'publisher', 'year', 'description']:
-            el = r.find(prop)
-
-            if el != None:
-                rom[prop] = el.text
-            
-        systems[system].setdefault('roms', []).append(rom)
-
-    return systems
-
-def get_window(name):
-    return windows[name]
-
-def unload():
-    Views = {}
-    State = {}
-    windows = {}
-    config = None
-
-# class MainView(object):
-#     @staticmethod
-#     def get_instance():
-#         global Views
-#         if 'main' not in Views:
-#             Views['main'] = MainView()
-#         return Views['main']
-# 
-#     def __init__(self):
-#         initialize('config.xml')
-#         self.window = mc.GetWindow(14000) # get_window('main')
-#         self.item_list = self.window.GetList(14055)
-# 
-#         items = mc.ListItems()
-#         for rom in get_rom_list():
-#           item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
-#           item.SetLabel(rom['name'])
-#           item.SetPath(rom['path'])
-#           item.SetThumbnail(rom['thumbnailPath'])
-#           item.SetProperty('description', rom['description'])
-#           item.SetProperty('system', rom['system'])
-#           item.SetProperty('publisher', rom['publisher'])
-#           item.SetProperty('year', rom['year'])
-#           items.append(item)
-# 
-#         self.item_list.SetItems(items)
-# 
-#     def on_list_item_click(self):
-#         items = self.item_list.GetItems()
-#         index = self.item_list.GetFocusedItem()
-# 
-#         item = items[index]
-#         State['current_item'] = item
-# 
-#         action = ActionView.get_instance()
-#         # launch_rom(item.GetProperty('system'), item.GetPath())
-# 
-# class ActionView(object):
-#     @staticmethod
-#     def get_instance():
-#         global Views
-#         if 'action' not in Views:
-#             Views['action'] = ActionView()
-#         return Views['action']
-# 
-#     def __init__(self):
-#         mc.ActivateWindow(14401)
-# 
-#         self.item = State['current_item']
-#         self.window = mc.GetWindow(14401) # get_window('action')
-#         self.item_list = self.window.GetList(5000)
-# 
-#         items = mc.ListItems()
-#         items.append(self.item)
-#         self.item_list.SetItems(items)
-# 
-#         system = config[self.item.GetProperty('system')]
-#         self.window.GetLabel(14101).SetLabel(self.item.GetProperty('publisher'))
-#         self.window.GetLabel(14102).SetLabel('[COLOR grey]' + self.item.GetProperty('year') + '[/COLOR]')
-#         self.window.GetLabel(14104).SetLabel(self.item.GetProperty('description'))
-#         self.window.GetLabel(6013).SetLabel(system['name'])
-#         self.window.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + self.item.GetPath() + '[/COLOR]')
-# 
-#     def launch_rom(self):
-#         items = self.item_list.GetItems()
-#         index = self.item_list.GetFocusedItem()
-# 
-#         print self.item.GetPath()
-#         item = items[index]
-#         launch_rom(item.GetProperty('system'), item.GetPath())
+def launch_rom(system, rom_path):
+    cmd = system['path'].replace("{rom_path}", "'%s'" % rom_path)
+    os.system(cmd)

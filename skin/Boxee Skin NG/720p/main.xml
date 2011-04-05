@@ -5,20 +5,22 @@
 	<onload lang="python"><![CDATA[
 import classic_gaming
 
-classic_gaming.initialize('config.xml')
+classic_gaming.initialize()
 window = mc.GetWindow(14000)
 item_list = window.GetList(14055)
 
 items = mc.ListItems()
-for rom in classic_gaming.get_rom_list():
+for rom in classic_gaming.fetch_roms():
   item = mc.ListItem(mc.ListItem.MEDIA_UNKNOWN)
-  item.SetLabel(rom['name'])
-  item.SetPath(rom['path'])
-  item.SetThumbnail(rom['thumbnailPath'])
-  item.SetProperty('description', rom['description'])
-  item.SetProperty('system', rom['system'])
-  item.SetProperty('publisher', rom['publisher'])
-  item.SetProperty('year', rom['year'])
+  print rom['title'], type(rom['title'])
+  item.SetLabel(str(rom['title']))
+  item.SetPath(str(rom['path']))
+  item.SetThumbnail(str(rom['thumbnail']))
+  item.SetProperty('description', str(rom['description']))
+  item.SetProperty('system', str(rom['system']))
+  item.SetProperty('publisher', str(rom['publisher']))
+  item.SetProperty('year', str(rom['year']))
+  item.SetProperty('image', str(rom['image']))
   items.append(item)
 
 item_list.SetItems(items)
@@ -66,6 +68,7 @@ items = item_list.GetItems()
 index = item_list.GetFocusedItem()
 item = items[index]
 
+# setup dummy item list
 mc.ActivateWindow(14401)
 action = mc.GetWindow(14401)
 action_list = action.GetList(5000)
@@ -73,6 +76,15 @@ action_items = mc.ListItems()
 action_items.append(item)
 action_list.SetItems(action_items)
 action_list.SetFocusedItem(0)
+
+# setup labels and textures
+system = classic_gaming.get_system_by_slug(item.GetProperty('system'))
+action.GetLabel(14101).SetLabel(str(item.GetProperty('publisher')))
+action.GetLabel(14102).SetLabel('[COLOR grey]' + str(item.GetProperty('year')) + '[/COLOR]')
+action.GetLabel(14104).SetLabel(str(item.GetProperty('description')))
+action.GetLabel(6013).SetLabel(str(system['name']))
+action.GetLabel(6742).SetLabel('[COLOR grey]Path: ' + str(item.GetPath()) + '[/COLOR]')
+action.GetImage(5011).SetTexture(str(item.GetProperty('image')))
 ]]></onclick>
         </content>
         <include>BrowseListAnimation</include>

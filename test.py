@@ -1,6 +1,5 @@
 import classic_gaming
 
-from xml.etree import ElementTree
-
 if __name__ == '__main__':
-    print classic_gaming.parse_config('config.xml')
+    classic_gaming.initialize()
+#    print classic_gaming.parse_config('config.xml')
