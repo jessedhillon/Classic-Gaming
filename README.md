@@ -13,11 +13,11 @@ Usage
 3. Edit `connect` in `classic_gaming.py` so it has your database details.
 4. Define an emulator with `cg_tool.py`, *e.g.*, this is how to define ZSNES:
 
-    `$ cg_tool.py define snes '/usr/bin/zsnes {rom_path}'`
+    `$ cg_tool.py define snes 'Super NES' '/usr/bin/zsnes {rom_path}'`
 
 5. Import ROMs into the system with:
 
-    `$ cg_tool.py import snes 'Super NES' /media/share/ROMs/snes/`
+    `$ cg_tool.py import snes /media/share/ROMs/snes/`
 
   * For best results, your ROM filename should be the name of the game. The script will attempt to identify ROMs by searching their filenames on GameFAQs.
 6. Launch Boxee and run the app. The ROMs you imported should now be in there. Screenshots, descriptions and box covers will be grabbed from the GameFAQs website.
