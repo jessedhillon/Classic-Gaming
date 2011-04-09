@@ -9,16 +9,18 @@ Usage
 -----
 
 1. Clone this repo into `~/.boxee/UserData/apps/com.devazero.classic_gaming/`
-2. Define an emulator with `cg_tool.py`, *e.g.*, this is how to define ZSNES:
+2. Create a MySQL database for storing configuration and ROM information.
+3. Edit `connect` in `classic_gaming.py` so it has your database details.
+4. Define an emulator with `cg_tool.py`, *e.g.*, this is how to define ZSNES:
 
     `$ cg_tool.py define snes '/usr/bin/zsnes {rom_path}'`
 
-3. Import ROMs into the system with:
+5. Import ROMs into the system with:
 
-    `$ cg_tool.py import snes /media/share/ROMs/snes/`
+    `$ cg_tool.py import snes 'Super NES' /media/share/ROMs/snes/`
 
   * For best results, your ROM filename should be the name of the game. The script will attempt to identify ROMs by searching their filenames on GameFAQs.
-4. Launch Boxee and run the app. The ROMs you imported should now be in there. Screenshots, descriptions and box covers will be grabbed from the GameFAQs website.
+6. Launch Boxee and run the app. The ROMs you imported should now be in there. Screenshots, descriptions and box covers will be grabbed from the GameFAQs website.
 
 Roadmap
 -------
@@ -26,11 +28,14 @@ Roadmap
 1. Create a search sidebar.
 2. Improve `cg_tool.py`.
 3. Cross-platform compatibility.
+4. Factor out configurable parameters into a config file.
+5. Factor out {load, click} handlers into common functions.
+6. Issue with OS X and fullscreen -- write an AppleScript to send keystroke for toggling fullscreen/windowed mode on Boxee.
 
 Changelog
 ---------
 
-*4/4/2011* Initial release
+*4/4/2011* 0.1, Initial release
 
 About
 -----
