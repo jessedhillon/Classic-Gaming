@@ -8,6 +8,7 @@ from interfaces import RomIdentifier, RomNotFoundException
 
 system_ids = {
     'gen': 10,
+    'nes': 19,
     'snes': 21,
 }
 

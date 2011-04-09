@@ -38,7 +38,6 @@ create table if not exists
     conn.close()
 
 def connect():
-    db = "classic_gaming.db"
     return mysql.connect(database='classic_gaming', user='root', password='')
 
 def insert_system(slug, name, path):
